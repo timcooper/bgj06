@@ -1,3 +1,5 @@
+var Main = Main || {};
+
 Main.Game = function (game) {
 
   this.game = game;
@@ -32,13 +34,15 @@ Main.Game.prototype = {
 
   create: function () {
 
-    this.game.world.setBounds(0, 0, 5000, this.game.height);
+    this.game.world.setBounds(0, 0, 10000, this.game.height);
 
     this.bg = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
     this.bg.fixedToCamera = true;
 
     this.player = this.game.add.sprite(0, 50, 'particle');
     this.player.anchor.setTo(0.5, 0.5);
+
+    this.player.body.acceleration.x = 100;
 
     this.game.camera.follow(this.player);
     var helper = Math.max(this.game.width, this.game.height) / 8;
@@ -70,8 +74,6 @@ Main.Game.prototype = {
     this.bg.tilePosition.x = -this.game.camera.x;
     this.bg.tilePosition.y = -this.game.camera.y;
 
-    this.player.body.acceleration.x = 50;
-
     this.setVerticalLevel();
 
     this.game.physics.collide(this.barriers, this.player, this.hitWall, null, this);
@@ -91,7 +93,7 @@ Main.Game.prototype = {
   },
 
   atEnd: function() {
-    return this.player.x >= this.game.world.width
+    return this.player.x >= this.game.world.width;
   },
 
   hitWall: function() {
@@ -151,4 +153,4 @@ Main.Game.prototype = {
 
   }
 
-}
+};
