@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0" />
+    <title>Game</title>
+    <script src="lib/phaser.js"></script>
+    <script src="src/Preloader.js"></script>
+    <script src="src/MainMenu.js"></script>
+    <script src="src/Game.js"></script>
+</head>
+<body>
+    <div id="game"></div>
+    <script type="text/javascript">
+        (function () {
+
+            var myGame = new Phaser.Game(800, 300, Phaser.CANVAS, 'game');
+            myGame.state.add('preloader', Main.Preloader, true);
+            myGame.state.add('game', Main.Game);
+
+        })();
+    </script>
+</body>
+</html>
