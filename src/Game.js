@@ -85,6 +85,13 @@ Main.Game.prototype = {
     if(this.blueKey.isDown)
       this.colorBlue();
 
+    if(this.atEnd())
+      this.game.state.start('game');
+
+  },
+
+  atEnd: function() {
+    return this.player.x >= this.game.world.width
   },
 
   hitWall: function() {
