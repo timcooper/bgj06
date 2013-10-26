@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0" />
-    <title>Game</title>
+    <title>Something something rainbows?</title>
     <script src="lib/phaser.js"></script>
     <script src="src/Preloader.js"></script>
     <script src="src/Game.js"></script>
@@ -14,9 +14,9 @@
     <script type="text/javascript">
         (function () {
 
-            var myGame = new Phaser.Game(800, 320, Phaser.CANVAS, 'game');
-            myGame.state.add('preloader', Main.Preloader, true);
-            myGame.state.add('game', Main.Game);
+            var game = new Phaser.Game(800, 416, Phaser.AUTO, 'game');
+            game.state.add('preloader', Main.Preloader, true);
+            game.state.add('game', Main.Game);
 
         })();
     </script>

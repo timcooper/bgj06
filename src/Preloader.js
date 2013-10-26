@@ -26,8 +26,6 @@ Main.Preloader.prototype = {
 
     	this.game.stage.backgroundColor = '#ffffff';
 
-    	this.game.world.setBounds(0, 0, 24000, this.game.height);
-
 		this.game.state.start('game');
 
 	}

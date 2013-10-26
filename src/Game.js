@@ -6,10 +6,23 @@ Main.Game = function (game) {
 
 Main.Game.prototype = {
 
+  LEVELS: {
+    1: {
+      y: 80
+    },
+    2: {
+      y: 208
+    },
+    3: {
+      y: 336
+    }
+  },
+
   player:    Phaser.Sprite,
   redKey:    null,
   yellowKey: null,
   blueKey:   null,
+  bg: null,
 
   preload: function () {
 
@@ -18,7 +31,10 @@ Main.Game.prototype = {
 
   create: function () {
 
-    this.game.add.tileSprite(0, 0, 24000, 800, 'background');
+    this.game.world.setBounds(0, 0, 5000, this.game.height);
+
+    this.bg = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
+    this.bg.fixedToCamera = true;
 
     this.player = this.game.add.sprite(0, 50, 'particle');
     this.player.anchor.setTo(0.5, 0.5);
@@ -36,9 +52,13 @@ Main.Game.prototype = {
 
   update: function () {
 
+    this.bg.tilePosition.x = -this.game.camera.x;
+    this.bg.tilePosition.y = -this.game.camera.y;
+
     this.player.body.acceleration.x = 50;
 
     this.setVerticalLevel();
+
     this.colorBlack();
 
     if(this.redKey.isDown)
@@ -93,12 +113,12 @@ Main.Game.prototype = {
   setVerticalLevel: function () {
 
     var mouseLevel = this.game.input.activePointer.y;
-    if(mouseLevel < 100) {
-      this.player.centerOn(this.player.center.x, 64);
-    }else if(mouseLevel < 200) {
-      this.player.centerOn(this.player.center.x, 160);
-    }else if(mouseLevel < 300) {
-      this.player.centerOn(this.player.center.x, 256);
+    if(mouseLevel < 144) {
+      this.player.centerOn(this.player.center.x, this.LEVELS[1].y);
+    }else if(mouseLevel < 272) {
+      this.player.centerOn(this.player.center.x, this.LEVELS[2].y);
+    }else {
+      this.player.centerOn(this.player.center.x, this.LEVELS[3].y);
     }
 
   }
