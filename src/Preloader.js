@@ -18,7 +18,7 @@ Main.Preloader.prototype = {
 		this.game.load.image('particlePurple', 'assets/img/particle_purple.png');
 		this.game.load.image('particleGreen', 'assets/img/particle_green.png');
 		this.game.load.image('particleWhite', 'assets/img/particle_white.png');
-		this.game.load.image('background', 'assets/img/sky-2x.png');
+		this.game.load.image('background', 'assets/img/background.png');
 
 	},
 
@@ -26,7 +26,7 @@ Main.Preloader.prototype = {
 
     	this.game.stage.backgroundColor = '#ffffff';
 
-    	this.game.world.setBounds(0, 0, 24000, 300);
+    	this.game.world.setBounds(0, 0, 24000, this.game.height);
 
 		this.game.state.start('game');
 

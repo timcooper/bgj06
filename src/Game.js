@@ -25,7 +25,7 @@ Main.Game.prototype = {
 
     this.game.camera.follow(this.player);
     var helper = Math.max(this.game.width, this.game.height) / 8;
-    console.log(Math.max(this.game.width, this.game.height));
+
     this.game.camera.deadzone = new Phaser.Rectangle(0, 0, 200, this.game.height);
 
     this.redKey    = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
@@ -94,11 +94,11 @@ Main.Game.prototype = {
 
     var mouseLevel = this.game.input.activePointer.y;
     if(mouseLevel < 100) {
-      this.player.centerOn(this.player.center.x, 41);
+      this.player.centerOn(this.player.center.x, 64);
     }else if(mouseLevel < 200) {
-      this.player.centerOn(this.player.center.x, 141);
+      this.player.centerOn(this.player.center.x, 160);
     }else if(mouseLevel < 300) {
-      this.player.centerOn(this.player.center.x, 241);
+      this.player.centerOn(this.player.center.x, 256);
     }
 
   }

@@ -7,7 +7,6 @@
     <title>Game</title>
     <script src="lib/phaser.js"></script>
     <script src="src/Preloader.js"></script>
-    <script src="src/MainMenu.js"></script>
     <script src="src/Game.js"></script>
 </head>
 <body>
@@ -15,7 +14,7 @@
     <script type="text/javascript">
         (function () {
 
-            var myGame = new Phaser.Game(800, 300, Phaser.CANVAS, 'game');
+            var myGame = new Phaser.Game(800, 320, Phaser.CANVAS, 'game');
             myGame.state.add('preloader', Main.Preloader, true);
             myGame.state.add('game', Main.Game);
 
