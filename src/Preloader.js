@@ -19,6 +19,7 @@ Main.Preloader.prototype = {
 		this.game.load.image('particleGreen', 'assets/img/particle_green.png');
 		this.game.load.image('particleWhite', 'assets/img/particle_white.png');
 		this.game.load.image('background', 'assets/img/background.png');
+		this.game.load.image('barrier1', 'assets/img/single_barrier.png');
 
 	},
 

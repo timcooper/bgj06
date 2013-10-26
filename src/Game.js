@@ -23,6 +23,7 @@ Main.Game.prototype = {
   yellowKey: null,
   blueKey:   null,
   bg: null,
+  barriers: [],
 
   preload: function () {
 
@@ -48,6 +49,20 @@ Main.Game.prototype = {
     this.yellowKey = this.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
     this.blueKey   = this.game.input.keyboard.addKey(Phaser.Keyboard.THREE);
 
+    this.barriers = this.game.add.group();
+    this.barriers.createMultiple(30, 'barrier1');
+    this.barriers.setAll('anchor.x', 0.5);
+    this.barriers.setAll('anchor.y', 0.5);
+    this.barriers.setAll('outOfBoundsKill', true);
+
+    var barrier = null;
+    for (var i = 0; i < this.barriers.length; i++) {
+      barrier = this.barriers.getFirstDead();
+
+      barrier.reset(-this.game.camera.x+Math.random()*24000, this.LEVELS[1+Math.floor(Math.random()*3)].y);
+      barrier.body.immovable = true;
+    }
+
   },
 
   update: function () {
@@ -59,6 +74,8 @@ Main.Game.prototype = {
 
     this.setVerticalLevel();
 
+    this.game.physics.collide(this.barriers, this.player, this.hitWall, null, this);
+
     this.colorBlack();
 
     if(this.redKey.isDown)
@@ -68,6 +85,10 @@ Main.Game.prototype = {
     if(this.blueKey.isDown)
       this.colorBlue();
 
+  },
+
+  hitWall: function() {
+    console.log('wall');
   },
 
   colorBlack: function() {
