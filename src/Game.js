@@ -54,6 +54,7 @@ Main.Game.prototype = {
   blueKey:   null,
   bg: null,
   barriers: [],
+  maxVelocity: 0,
 
   preload: function () {
 
@@ -112,6 +113,7 @@ Main.Game.prototype = {
       this.colorBlue();
 
     if(this.atEnd()) {
+      alert('Max velocity: ' + this.maxVelocity);
       this.game.state.start('game');
     }
 
@@ -203,6 +205,18 @@ Main.Game.prototype = {
       if (this.canChange(prop) && Math.random() < 1/++count)
         result = prop;
     return result;
+  },
+
+  writeDebug: function () {
+    var $velocity = window.document.getElementById('debug-velocity'),
+        velocity = Math.round(this.player.body.velocity.x),
+        $dist  = window.document.getElementById('debug-dist');
+
+    if(velocity > this.maxVelocity)
+      this.maxVelocity = velocity;
+
+    $velocity.innerHTML = velocity;
+    $dist.innerHTML = Math.round(this.player.center.x + this.game.camera.x);
   }
 
 };

@@ -5,13 +5,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0" />
     <title>Something something rainbows?</title>
-    <script src="game.js"></script>
+    <script src="game.js?v=2"></script>
     <style type="text/css">
     body { margin: 0; padding: 1em 0; color: #444; font-family: sans-serif; }
     .wrapper { background:#ccc; width:960px; margin: 0 auto; padding: 0 1em; overflow: auto; }
-    #game { background:#444; }
-    #game canvas { margin: 1em auto; }
+    #game { background:#444; padding: 1em 0; overflow: auto; }
+    #game canvas { margin: 0 auto; }
     dt { font-weight: bold; }
+    .debug { background: #000; width: 790px; margin: 0 auto; padding: 5px; color: yellow; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -20,7 +21,13 @@
         <h2>Theme: Rainbows</h2>
         <p>Move mouse to change level and avoid barriers.</p>
     </div>
-    <div id="game"></div>
+    <div id="game">
+        <div class="debug">
+            <strong>DEBUG:</strong> 
+            Velocity: <span id="debug-velocity"></span> | 
+            Distance: <span id="debug-dist"></span>
+        </div>
+    </div>
     <div class="wrapper">
         <h3>Issues</h3>
         <dl>
