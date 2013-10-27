@@ -103,7 +103,7 @@ Main.Game.prototype = {
     /*this.tween = this.game.add.tween(this.player.body.velocity)
           .to({x:200}, 1000, Phaser.Easing.Cubic.Out, true);*/
     this.music = this.game.add.audio('gameLoop');
-    this.music.play('', 0, 0.1, true);
+    this.music.play('', 0, 0.2, true);
 
     this.player.body.acceleration.x = 16;
     this.player.body.velocity.x = 100;
@@ -194,7 +194,7 @@ Main.Game.prototype = {
       barrier.alive = false;
       if(this.currentColor === gateColor) {
         var audio = this.game.add.audio('gateDischarge' + this.game.rnd.integerInRange(1, 4));
-        audio.play('', 0, 0.2);
+        audio.play('', 0, 0.1);
         this.gatesCleared++;
 
         this.player.body.velocity.x += 128;
@@ -292,13 +292,10 @@ Main.Game.prototype = {
       tween = this.game.add.tween(this.player);
     if(mouseLevel < 144) {
       tween.stop().to({y: this.LEVELS[1].y}, 250, Phaser.Easing.Cubic.Out, true);
-      //this.player.centerOn(this.player.center.x, this.LEVELS[1].y);
     }else if(mouseLevel < 272) {
       tween.stop().to({y: this.LEVELS[2].y}, 250, Phaser.Easing.Cubic.Out, true);
-      //this.player.centerOn(this.player.center.x, this.LEVELS[2].y);
     }else {
       tween.stop().to({y: this.LEVELS[3].y}, 250, Phaser.Easing.Cubic.Out, true);
-      //this.player.centerOn(this.player.center.x, this.LEVELS[3].y);
     }
 
   },
