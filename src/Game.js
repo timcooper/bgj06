@@ -65,6 +65,7 @@ Main.Game.prototype = {
   currentColor: 'black',
   tween: null,
   gatesCleared: 0,
+  lastTime: 0,
 
   preload: function () {
 
@@ -85,7 +86,7 @@ Main.Game.prototype = {
     this.tween = this.game.add.tween(this.player.body.velocity)
           .to({x:200}, 1000, Phaser.Easing.Cubic.Out, true);
 
-    this.player.body.acceleration.x = 8;
+    this.player.body.acceleration.x = 16;
     this.player.body.maxVelocity.x = 640;
 
     this.game.camera.follow(this.player);
@@ -98,7 +99,7 @@ Main.Game.prototype = {
     this.blueKey   = this.game.input.keyboard.addKey(Phaser.Keyboard.THREE);
 
     this.barriers = this.game.add.group();
-    this.barriers.createMultiple(30, 'barrier1');
+    this.barriers.createMultiple(25, 'barrier1');
     this.barriers.setAll('anchor.x', 0.5);
     this.barriers.setAll('outOfBoundsKill', true);
 
@@ -137,11 +138,12 @@ Main.Game.prototype = {
 
   finish: function(success) {
     if(success) {
-      alert('Winner! You finished in ' + (this.game.time.elapsed / 1000) + 'seconds!');
+      alert('Winner! You cleared all ' + this.gatesCleared + ' gates!');
     }else{
-      alert('Fail! You failed on gate number: ' + (this.gatesCleared+1));
+      alert('Fail! You crashed after ' + (this.gatesCleared) + '/25 gates');
     }
     this.gatesCleared = 0;
+    this.lastTime = this.game.time.now;
     this.game.state.start('game');
   },
 
