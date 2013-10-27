@@ -4,8 +4,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0" />
-    <title>Something something rainbows?</title>
-    <script src="game.js?v=2"></script>
+    <title>HueChute | BaconGameJam06 Entry</title>
+    <script src="game.js?v=3"></script>
     <style type="text/css">
     body { margin: 0; padding: 1em 0; color: #444; font-family: sans-serif; }
     .wrapper { background:#ccc; width:960px; margin: 0 auto; padding: 0 1em; overflow: auto; }
@@ -57,6 +57,7 @@
 
             var game = new Phaser.Game(800, 416, Phaser.AUTO, 'game');
             game.state.add('preloader', Main.Preloader, true);
+            game.state.add('mainmenu', Main.MainMenu);
             game.state.add('game', Main.Game);
 
         })();

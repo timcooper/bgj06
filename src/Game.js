@@ -54,7 +54,7 @@ Main.Game.prototype = {
   },
 
   player:    Phaser.Sprite,
-  enabledColors: ['red', 'blue', 'yellow'],
+  enabledColors: ['red'],
   redKey:    null,
   yellowKey: null,
   blueKey:   null,
@@ -82,7 +82,6 @@ Main.Game.prototype = {
     this.player = this.game.add.sprite(0, 50, 'particle');
     this.player.anchor.setTo(0.5, 0.5);
 
-    //this.player.body.acceleration.x = 32;
     this.tween = this.game.add.tween(this.player.body.velocity)
           .to({x:200}, 1000, Phaser.Easing.Cubic.Out, true);
 
@@ -93,6 +92,8 @@ Main.Game.prototype = {
     var helper = Math.max(this.game.width, this.game.height) / 8;
 
     this.game.camera.deadzone = new Phaser.Rectangle(0, 0, 200, this.game.height);
+
+    this.enableColors();
 
     this.redKey    = this.game.input.keyboard.addKey(Phaser.Keyboard.ONE);
     this.yellowKey = this.game.input.keyboard.addKey(Phaser.Keyboard.TWO);
@@ -137,14 +138,18 @@ Main.Game.prototype = {
   },
 
   finish: function(success) {
-    if(success) {
+    if(success && Main.MainMenu.prototype.unlockedLevels.length < 6) {
+      if(Main.MainMenu.prototype.unlockedLevels.indexOf(Main.MainMenu.prototype.currentLevel+1) === -1)
+        Main.MainMenu.prototype.unlockedLevels.push(Main.MainMenu.prototype.currentLevel+1);
+
       alert('Winner! You cleared all ' + this.gatesCleared + ' gates!');
     }else{
       alert('Fail! You crashed after ' + (this.gatesCleared) + '/25 gates');
     }
     this.gatesCleared = 0;
     this.lastTime = this.game.time.now;
-    this.game.state.start('game');
+
+    this.game.state.start('mainmenu', true);
   },
 
   atEnd: function() {
@@ -159,7 +164,7 @@ Main.Game.prototype = {
       barrier.alive = false;
       if('gate'+this.currentColor.charAt(0).toUpperCase() + this.currentColor.slice(1) === this.gates.getAt(this.barriers.getIndex(barrier)).key) {
         this.gatesCleared++;
-        console.log('win');
+
         this.player.body.velocity.x += 128;
         this.game.add.tween(this.player.body.velocity)
           .to({x:this.player.body.velocity.x-32}, 500, Phaser.Easing.Cubic.Out, true);
@@ -236,6 +241,16 @@ Main.Game.prototype = {
       this.player.centerOn(this.player.center.x, this.LEVELS[3].y);
     }
 
+  },
+
+  enableColors: function() {
+    var result;
+    var count = 0;
+    for (var prop in this.COLORS) {
+      count++;
+      if(count <= Main.MainMenu.prototype.currentLevel)
+          this.enabledColors.push(prop);
+    }
   },
 
   generateLevel: function() {

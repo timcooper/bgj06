@@ -1,0 +1,8 @@
+# System and IDE files
+Thumbs.db
+bgj06.sublime-project
+bgj06.sublime-workspace
+
+phaser/
+node_modules/
+asset_src/

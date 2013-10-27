@@ -10,6 +10,7 @@ Main.Preloader.prototype = {
 
   preload: function () {
 
+    this.game.load.image('title', 'assets/img/title.png');
     this.game.load.image('particle', 'assets/img/particle.png');
     this.game.load.image('particleRed', 'assets/img/particle_red.png');
     this.game.load.image('particleYellow', 'assets/img/particle_yellow.png');
@@ -25,6 +26,10 @@ Main.Preloader.prototype = {
     this.game.load.image('gateRed', 'assets/img/gate_red.png');
     this.game.load.image('gateYellow', 'assets/img/gate_yellow.png');
     this.game.load.image('gateBlue', 'assets/img/gate_blue.png');
+    this.game.load.image('gateOrange', 'assets/img/gate_orange.png');
+    this.game.load.image('gateGreen', 'assets/img/gate_green.png');
+    this.game.load.image('gatePurple', 'assets/img/gate_purple.png');
+    this.game.load.spritesheet('button', 'assets/img/buttons.png', 33,33);
 
   },
 
@@ -32,7 +37,7 @@ Main.Preloader.prototype = {
 
     this.game.stage.backgroundColor = '#ffffff';
 
-    this.game.state.start('game');
+    this.game.state.start('mainmenu');
 
   }
 
