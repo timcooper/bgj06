@@ -24,31 +24,37 @@ Main.Game.prototype = {
     red : {
       particle: 'particleRed',
       gate: 'gateRed',
+      end: 'endRed',
       particleFrame: 1
     },
     yellow : {
       particle: 'particleYellow',
       gate: 'gateYellow',
+      end: 'endYellow',
       particleFrame: 2
     },
     blue : {
       particle: 'particleBlue',
       gate: 'gateBlue',
+      end: 'endBlue',
       particleFrame: 3
     },
     orange : {
       particle: 'particleOrange',
       gate: 'gateOrange',
+      end: 'endOrange',
       particleFrame: 4
     },
     green : {
       particle: 'particleGreen',
       gate: 'gateGreen',
+      end: 'endGreen',
       particleFrame: 5
     },
     purple : {
       particle: 'particlePurple',
       gate: 'gatePurple',
+      end: 'endPurple',
       particleFrame: 6
     },
     white : {
@@ -163,11 +169,6 @@ Main.Game.prototype = {
     //this.writeDebug();
   },
 
-  render: function() {
-    this.game.debug.renderSpriteBounds(this.player);
-    this.game.debug.renderSpriteBounds(this.barriers.getFirstAlive());
-  },
-
   atEnd: function() {
     return this.player.x >= this.game.world.width;
   },
@@ -177,9 +178,9 @@ Main.Game.prototype = {
     var gateColor = this.gates.getAt(this.barriers.getIndex(barrier)).key.slice(4).toLowerCase();
 
     clearInterval(this.rumbleInterval);
-    this.rumbleInterval = setInterval(this.rumble, this.rumbleSpeed, this.game.camera.bounds, this.player.body.velocity.x > 300 ? 10 : 5, this.player.body.velocity.x > 300 ? 10 : 5);
+    this.rumbleInterval = setInterval(this.rumble, this.rumbleSpeed, this.game.camera, 10, this.player.body.velocity.x > 300 ? 80 : 50);
     clearInterval(this.rumbleTime);
-    this.rumbleTime = setInterval(this.stopRumble, this.rumbleSpeed*10, this.game.camera.bounds, this.rumbleInterval);
+    this.rumbleTime = setInterval(this.stopRumble, this.rumbleSpeed*10, this.game.camera, this.rumbleInterval);
 
     this.COLORS[gateColor].emitter.setXSpeed(-(this.player.body.velocity.x/3)-25, this.player.body.velocity.x);
     this.COLORS[gateColor].emitter.setYSpeed(-(this.player.body.velocity.x/3), this.player.body.velocity.x/3);
@@ -197,8 +198,8 @@ Main.Game.prototype = {
         this.gatesCleared++;
 
         this.player.body.velocity.x += 128;
-        this.game.add.tween(this.player.body.velocity)
-          .to({x:this.player.body.velocity.x-32}, 500, Phaser.Easing.Cubic.Out, true);
+        /*this.game.add.tween(this.player.body.velocity)
+          .to({x:this.player.body.velocity.x-32}, 500, Phaser.Easing.Cubic.Out, true);*/
       }else{
         this.finish(false);
       }
@@ -317,12 +318,18 @@ Main.Game.prototype = {
     var barrier = null;
     for (var i = 0; i < this.barriers.length; i++) {
       var level = this.game.rnd.integerInRange(1, 4),
-        color = this.COLORS[this.enabledColors[this.game.rnd.integerInRange(1, this.enabledColors.length + 1) - 1]],
+        color_string = this.enabledColors[this.game.rnd.integerInRange(1, this.enabledColors.length + 1) - 1],
+        color = this.COLORS[color_string],
         barrierX = 512*(i+1);
 
       barrier = this.barriers.getFirstDead();
       barrier.body.customSeparateX = true;
       barrier.body.customSeparateY = true;
+
+      if(this.barriers.length - 1 === i) {
+        var end_gate = this.game.add.sprite(0,0,color.end);
+        end_gate.centerOn(12800 - 109, this.LEVELS[level].y);
+      }
 
       // set correct sprite for level
       if(level > 1)
@@ -334,7 +341,7 @@ Main.Game.prototype = {
       this.gates.add(gate);
 
       barrier.reset(barrierX, 0);
-      barrier.body.immovable = true;
+      //barrier.body.immovable = true;
     }
 
   },
@@ -365,15 +372,13 @@ Main.Game.prototype = {
     rx = (rx === 0 && x !== 0) ? ((Math.random() < 0.5) ? 1 : -1) : rx;
     ry = (ry === 0 && y !== 0) ? ((Math.random() < 0.5) ? 1 : -1) : ry;
 
-    rect.x = rx;
-    rect.y = ry;
+    rect.x += rx;
+    rect.y += ry;
 
   },
 
   stopRumble: function(rect, interval) {
     clearInterval(interval);
-    rect.x = 0;
-    rect.y = 0;
   },
 
   writeDebug: function () {

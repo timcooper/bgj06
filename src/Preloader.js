@@ -30,6 +30,12 @@ Main.Preloader.prototype = {
     this.game.load.image('gateOrange', 'assets/img/gate_orange.png');
     this.game.load.image('gateGreen', 'assets/img/gate_green.png');
     this.game.load.image('gatePurple', 'assets/img/gate_purple.png');
+    this.game.load.image('endRed', 'assets/img/end_red.png');
+    this.game.load.image('endYellow', 'assets/img/end_yellow.png');
+    this.game.load.image('endBlue', 'assets/img/end_blue.png');
+    this.game.load.image('endOrange', 'assets/img/end_orange.png');
+    this.game.load.image('endGreen', 'assets/img/end_green.png');
+    this.game.load.image('endPurple', 'assets/img/end_purple.png');
     this.game.load.spritesheet('particles', 'assets/img/particles.png', 5, 5);
     this.game.load.spritesheet('button', 'assets/img/buttons.png', 33,33);
 
