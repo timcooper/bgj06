@@ -54,7 +54,7 @@ Main.Game.prototype = {
   },
 
   player:    Phaser.Sprite,
-  enabledColors: ['red'],
+  enabledColors: ['red', 'blue', 'yellow'],
   redKey:    null,
   yellowKey: null,
   blueKey:   null,
@@ -62,6 +62,9 @@ Main.Game.prototype = {
   barriers: [],
   gates: [],
   maxVelocity: 0,
+  currentColor: 'black',
+  tween: null,
+  gatesCleared: 0,
 
   preload: function () {
 
@@ -78,7 +81,12 @@ Main.Game.prototype = {
     this.player = this.game.add.sprite(0, 50, 'particle');
     this.player.anchor.setTo(0.5, 0.5);
 
-    this.player.body.acceleration.x = 50;
+    //this.player.body.acceleration.x = 32;
+    this.tween = this.game.add.tween(this.player.body.velocity)
+          .to({x:200}, 1000, Phaser.Easing.Cubic.Out, true);
+
+    this.player.body.acceleration.x = 8;
+    this.player.body.maxVelocity.x = 640;
 
     this.game.camera.follow(this.player);
     var helper = Math.max(this.game.width, this.game.height) / 8;
@@ -94,6 +102,8 @@ Main.Game.prototype = {
     this.barriers.setAll('anchor.x', 0.5);
     this.barriers.setAll('outOfBoundsKill', true);
 
+    this.gates = this.game.add.group();
+
     this.generateLevel();
 
     this.player.bringToTop();
@@ -101,8 +111,6 @@ Main.Game.prototype = {
   },
 
   update: function () {
-    var time   = this.game.time.elapsed,
-      deviance = 2* time / (1+time);
 
     this.bg.tilePosition.x = -this.game.camera.x;
     this.bg.tilePosition.y = -this.game.camera.y;
@@ -121,12 +129,20 @@ Main.Game.prototype = {
       this.colorBlue();
 
     if(this.atEnd()) {
-      alert('Max velocity: ' + this.maxVelocity);
-      this.game.state.start('game');
+      this.finish(true);
     }
 
     this.writeDebug();
+  },
 
+  finish: function(success) {
+    if(success) {
+      alert('Winner! You finished in ' + (this.game.time.elapsed / 1000) + 'seconds!');
+    }else{
+      alert('Fail! You failed on gate number: ' + (this.gatesCleared+1));
+    }
+    this.gatesCleared = 0;
+    this.game.state.start('game');
   },
 
   atEnd: function() {
@@ -135,54 +151,74 @@ Main.Game.prototype = {
 
   hitWall: function(particle, barrier) {
 
-    if((barrier.key == 'barrier1' && this.player.center.y < 144) || 
+    if(barrier.alive && ((barrier.key == 'barrier1' && this.player.center.y < 144) || 
       (barrier.key == 'barrier2' && this.player.center.y < 272 && this.player.center.x > 144) ||
-      (barrier.key == 'barrier3' && this.player.center.y > 272)) {
-      console.log('yay');
-      this.player.body.acceleration.x = 50;
+      (barrier.key == 'barrier3' && this.player.center.y > 272))) {
+      barrier.alive = false;
+      if('gate'+this.currentColor.charAt(0).toUpperCase() + this.currentColor.slice(1) === this.gates.getAt(this.barriers.getIndex(barrier)).key) {
+        this.gatesCleared++;
+        console.log('win');
+        this.player.body.velocity.x += 128;
+        this.game.add.tween(this.player.body.velocity)
+          .to({x:this.player.body.velocity.x-32}, 500, Phaser.Easing.Cubic.Out, true);
+      }else{
+        this.finish(false);
+      }
     }else{
-      this.player.body.velocity.x = 0;
-      this.player.body.acceleration.x = 0;
+        this.finish(false);
     }
 
   },
 
   colorBlack: function() {
+    this.currentColor = 'black';
     this.player.loadTexture(this.COLORS.black.particle, 0);
   },
 
   colorRed: function() {
     if(this.yellowKey.isDown && this.blueKey.isDown && this.canChange('white')) {
+      this.currentColor = 'white';
       this.player.loadTexture(this.COLORS.white.particle, 0);
     }else if(this.yellowKey.isDown && this.canChange('orange')) {
+      this.currentColor = 'orange';
       this.player.loadTexture(this.COLORS.orange.particle, 0);
     }else if(this.blueKey.isDown && this.canChange('purple')) {
+      this.currentColor = 'purple';
       this.player.loadTexture(this.COLORS.purple.particle, 0);
     }else{
+      this.currentColor = 'red';
       this.player.loadTexture(this.COLORS.red.particle, 0);
     }
   },
 
   colorYellow: function() {
     if(this.redKey.isDown && this.blueKey.isDown && this.canChange('white')) {
+      this.currentColor = 'white';
       this.player.loadTexture(this.COLORS.white.particle, 0);
     }else if(this.redKey.isDown && this.canChange('orange')) {
+      this.currentColor = 'orange';
       this.player.loadTexture(this.COLORS.orange.particle, 0);
     }else if(this.blueKey.isDown && this.canChange('green')) {
+      this.currentColor = 'green';
       this.player.loadTexture(this.COLORS.green.particle, 0);
     }else if(this.canChange('yellow')) {
+      this.currentColor = 'yellow';
       this.player.loadTexture(this.COLORS.yellow.particle, 0);
     }
   },
 
   colorBlue: function() {
     if(this.yellowKey.isDown && this.redKey.isDown && this.canChange('white')) {
+      this.currentColor = 'white';
       this.player.loadTexture(this.COLORS.white.particle, 0);
     }else if(this.yellowKey.isDown && this.canChange('green')) {
+      this.currentColor = 'green';
       this.player.loadTexture(this.COLORS.green.particle, 0);
     }else if(this.redKey.isDown && this.canChange('purple')) {
+      this.currentColor = 'purple';
       this.player.loadTexture(this.COLORS.purple.particle, 0);
     }else if(this.canChange('blue')) {
+      this.currentColor = 'blue';
       this.player.loadTexture(this.COLORS.blue.particle, 0);
     }
   },
@@ -205,7 +241,7 @@ Main.Game.prototype = {
     var barrier = null;
     for (var i = 0; i < this.barriers.length; i++) {
       var level = this.game.rnd.integerInRange(1, 4),
-        color = this.COLORS[this.enabledColors[this.game.rnd.integerInRange(1, this.enabledColors.length) - 1]],
+        color = this.COLORS[this.enabledColors[this.game.rnd.integerInRange(1, this.enabledColors.length + 1) - 1]],
         barrierX = 512*(i+1);
 
       barrier = this.barriers.getFirstDead();
@@ -215,6 +251,11 @@ Main.Game.prototype = {
       // set correct sprite for level
       if(level > 1)
         barrier.loadTexture('barrier'+level, 0);
+
+      var gate = this.game.add.sprite(0,0,color.gate);
+      gate.centerOn(barrierX, this.LEVELS[level].y);
+
+      this.gates.add(gate);
 
       barrier.reset(barrierX, 0);
       barrier.body.immovable = true;

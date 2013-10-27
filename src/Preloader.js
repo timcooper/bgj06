@@ -23,6 +23,8 @@ Main.Preloader.prototype = {
     this.game.load.image('barrier2', 'assets/img/barrier_2.png');
     this.game.load.image('barrier3', 'assets/img/barrier_3.png');
     this.game.load.image('gateRed', 'assets/img/gate_red.png');
+    this.game.load.image('gateYellow', 'assets/img/gate_yellow.png');
+    this.game.load.image('gateBlue', 'assets/img/gate_blue.png');
 
   },
 
