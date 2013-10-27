@@ -7,23 +7,12 @@
     <title>HueChute | BaconGameJam06 Entry</title>
     <script src="game.js?v=5"></script>
     <style type="text/css">
-    body { margin: 0; padding: 1em 0; color: #444; font-family: sans-serif; }
+    body { background: #888; margin: 0; padding: 1em 0; color: #444; font-family: sans-serif; }
     .wrapper { background:#ccc; width:960px; margin: 0 auto; padding: 0 1em; overflow: auto; }
     #game { background:#444; padding: 1em 0; overflow: auto; }
     #game canvas { margin: 0 auto; }
     dt { font-weight: bold; }
     .debug { background: #000; width: 790px; margin: 0 auto; padding: 5px; color: yellow; font-size: 12px; }
-    @-webkit-keyframes rumble {
-    0% {-webkit-transform: rotate(0deg);}
-    25% {-webkit-transform: translate(2px, 0px) rotate(-3deg);}
-    50% {-webkit-transform: translate(0px, -2px) rotate(0deg);}
-    75% {-webkit-transform: translate(-2px, 0px) rotate(3deg);}
-    100% {-webkit-transform: translate(0px, 2px) rotate(0deg);} 
-    }
-
-    .rumble {
-        -webkit-animation: rumble .0625s infinite linear;
-    }
     </style>
 </head>
 <body>
@@ -52,23 +41,16 @@
             <dt>Later levels are overly difficult</dt>
             <dd>Need to figure out some balance for the latter 3 levels</dd>
         </dl>
-        <h3>Working On</h3>
+        <h3>Some time maybe</h3>
         <dl>
             <dt>UI / HUD</dt>
             <dd>Tracking gates passed / total gates, maybe some control reminders/indicators.</dd>
-            <dt>Level 6 finish indicator</dt>
-            <dd>Currently hard to tell if you failed on last gate or won level 6.</dd>
-            <dt>Visual effects</dt>
-            <dd>Needs some life, maybe some particles, camera FX etc.</dd>
-        </dl>
-        <h3>If time allows</h3>
-        <dl>
+            <dt>Live after level 6</dt>
+            <dd>Bonus levels, more difficulties?.</dd>
+            <dt>Improve aesthetics</dt>
+            <dd>They're a bit inconsistent stylistically.</dd>
             <dt>Save state</dt>
             <dd>Can use local storage to keep track of progress</dd>
-            <dt>Sound</dt>
-            <dd>Sound FX and music.</dd>
-            <dt>Improve aesthetic</dt>
-            <dd>Went a bit all over the place with styles, could do with more consistent assets.</dd>
             <dt>General refactoring, optimsations etc.</dt>
             <dd>Shit got messy yo.</dd>
         </dl>
