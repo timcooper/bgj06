@@ -23,33 +23,41 @@ Main.Game.prototype = {
   COLORS: {
     red : {
       particle: 'particleRed',
-      gate: 'gateRed'
+      gate: 'gateRed',
+      particleFrame: 1
     },
     yellow : {
       particle: 'particleYellow',
-      gate: 'gateYellow'
+      gate: 'gateYellow',
+      particleFrame: 2
     },
     blue : {
       particle: 'particleBlue',
-      gate: 'gateBlue'
+      gate: 'gateBlue',
+      particleFrame: 3
     },
     orange : {
       particle: 'particleOrange',
-      gate: 'gateOrange'
+      gate: 'gateOrange',
+      particleFrame: 4
     },
     green : {
       particle: 'particleGreen',
-      gate: 'gateGreen'
+      gate: 'gateGreen',
+      particleFrame: 5
     },
     purple : {
       particle: 'particlePurple',
-      gate: 'gatePurple'
+      gate: 'gatePurple',
+      particleFrame: 6
     },
     white : {
-      particle: 'particleWhite'
+      particle: 'particleWhite',
+      particleFrame: 0
     },
     black : {
       particle: 'particle',
+      particleFrame: 7,
     }
   },
 
@@ -66,6 +74,10 @@ Main.Game.prototype = {
   tween: null,
   gatesCleared: 0,
   lastTime: 0,
+  emitter: null,
+  rumbleSpeed: 50,
+  rumbleTime: 1500,
+  music: null,
 
   preload: function () {
 
@@ -79,13 +91,16 @@ Main.Game.prototype = {
     this.bg = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
     this.bg.fixedToCamera = true;
 
-    this.player = this.game.add.sprite(0, 50, 'particle');
+    this.player = this.game.add.sprite(0, 208, 'particle');
     this.player.anchor.setTo(0.5, 0.5);
 
-    this.tween = this.game.add.tween(this.player.body.velocity)
-          .to({x:200}, 1000, Phaser.Easing.Cubic.Out, true);
+    /*this.tween = this.game.add.tween(this.player.body.velocity)
+          .to({x:200}, 1000, Phaser.Easing.Cubic.Out, true);*/
+    this.music = this.game.add.audio('gameLoop');
+    this.music.play('', 0, 0.1, true);
 
     this.player.body.acceleration.x = 16;
+    this.player.body.velocity.x = 100;
     this.player.body.maxVelocity.x = 640;
 
     this.game.camera.follow(this.player);
@@ -102,9 +117,20 @@ Main.Game.prototype = {
     this.barriers = this.game.add.group();
     this.barriers.createMultiple(25, 'barrier1');
     this.barriers.setAll('anchor.x', 0.5);
+    this.barriers.setAll('body.width', 6);
+    this.barriers.setAll('body.x', 26);
     this.barriers.setAll('outOfBoundsKill', true);
 
     this.gates = this.game.add.group();
+
+    for(var prop in this.COLORS) {
+      this.COLORS[prop].emitter = this.game.add.emitter(0, 0, 200);
+
+      this.COLORS[prop].emitter.makeParticles('particles', [0,this.COLORS[prop].particleFrame]);
+      this.COLORS[prop].emitter.gravity = 2;
+      this.COLORS[prop].emitter.particleDrag.x = 500;
+      this.COLORS[prop].emitter.bounce.setTo(0.5, 0.5);
+    }
 
     this.generateLevel();
 
@@ -137,10 +163,60 @@ Main.Game.prototype = {
     //this.writeDebug();
   },
 
+  render: function() {
+    this.game.debug.renderSpriteBounds(this.player);
+    this.game.debug.renderSpriteBounds(this.barriers.getFirstAlive());
+  },
+
+  atEnd: function() {
+    return this.player.x >= this.game.world.width;
+  },
+
+  hitWall: function(player, barrier) {
+
+    var gateColor = this.gates.getAt(this.barriers.getIndex(barrier)).key.slice(4).toLowerCase();
+
+    clearInterval(this.rumbleInterval);
+    this.rumbleInterval = setInterval(this.rumble, this.rumbleSpeed, this.game.camera.bounds, this.player.body.velocity.x > 300 ? 10 : 5, this.player.body.velocity.x > 300 ? 10 : 5);
+    clearInterval(this.rumbleTime);
+    this.rumbleTime = setInterval(this.stopRumble, this.rumbleSpeed*10, this.game.camera.bounds, this.rumbleInterval);
+
+    this.COLORS[gateColor].emitter.setXSpeed(-(this.player.body.velocity.x/3)-25, this.player.body.velocity.x);
+    this.COLORS[gateColor].emitter.setYSpeed(-(this.player.body.velocity.x/3), this.player.body.velocity.x/3);
+    this.COLORS[gateColor].emitter.x = barrier.x;
+    this.COLORS[gateColor].emitter.y = player.y;
+    this.COLORS[gateColor].emitter.start(true, 2000, null, 30);
+
+    if(barrier.alive && ((barrier.key == 'barrier1' && this.player.center.y < 144) || 
+      (barrier.key == 'barrier2' && this.player.center.y < 272 && this.player.center.x > 144) ||
+      (barrier.key == 'barrier3' && this.player.center.y > 272))) {
+      barrier.alive = false;
+      if(this.currentColor === gateColor) {
+        var audio = this.game.add.audio('gateDischarge' + this.game.rnd.integerInRange(1, 4));
+        audio.play('', 0, 0.2);
+        this.gatesCleared++;
+
+        this.player.body.velocity.x += 128;
+        this.game.add.tween(this.player.body.velocity)
+          .to({x:this.player.body.velocity.x-32}, 500, Phaser.Easing.Cubic.Out, true);
+      }else{
+        this.finish(false);
+      }
+    }else{
+        this.finish(false);
+    }
+
+  },
+
   finish: function(success) {
     var unlocked = Main.MainMenu.prototype.unlockedLevels,
       level = Main.MainMenu.prototype.currentLevel,
       highestGates = Main.MainMenu.prototype.highestGates;
+
+    this.music.stop();
+
+    clearInterval(this.rumbleInterval);
+    clearInterval(this.rumbleTime);
 
     if(success && unlocked.length < 6) {
       if(unlocked.indexOf(level+1) === -1)
@@ -154,31 +230,6 @@ Main.Game.prototype = {
     this.lastTime = this.game.time.now;
 
     this.game.state.start('mainmenu', true);
-  },
-
-  atEnd: function() {
-    return this.player.x >= this.game.world.width;
-  },
-
-  hitWall: function(particle, barrier) {
-
-    if(barrier.alive && ((barrier.key == 'barrier1' && this.player.center.y < 144) || 
-      (barrier.key == 'barrier2' && this.player.center.y < 272 && this.player.center.x > 144) ||
-      (barrier.key == 'barrier3' && this.player.center.y > 272))) {
-      barrier.alive = false;
-      if('gate'+this.currentColor.charAt(0).toUpperCase() + this.currentColor.slice(1) === this.gates.getAt(this.barriers.getIndex(barrier)).key) {
-        this.gatesCleared++;
-
-        this.player.body.velocity.x += 128;
-        this.game.add.tween(this.player.body.velocity)
-          .to({x:this.player.body.velocity.x-32}, 500, Phaser.Easing.Cubic.Out, true);
-      }else{
-        this.finish(false);
-      }
-    }else{
-        this.finish(false);
-    }
-
   },
 
   colorBlack: function() {
@@ -236,13 +287,17 @@ Main.Game.prototype = {
 
   setVerticalLevel: function () {
 
-    var mouseLevel = this.game.input.activePointer.y;
+    var mouseLevel = this.game.input.activePointer.y,
+      tween = this.game.add.tween(this.player);
     if(mouseLevel < 144) {
-      this.player.centerOn(this.player.center.x, this.LEVELS[1].y);
+      tween.stop().to({y: this.LEVELS[1].y}, 250, Phaser.Easing.Cubic.Out, true);
+      //this.player.centerOn(this.player.center.x, this.LEVELS[1].y);
     }else if(mouseLevel < 272) {
-      this.player.centerOn(this.player.center.x, this.LEVELS[2].y);
+      tween.stop().to({y: this.LEVELS[2].y}, 250, Phaser.Easing.Cubic.Out, true);
+      //this.player.centerOn(this.player.center.x, this.LEVELS[2].y);
     }else {
-      this.player.centerOn(this.player.center.x, this.LEVELS[3].y);
+      tween.stop().to({y: this.LEVELS[3].y}, 250, Phaser.Easing.Cubic.Out, true);
+      //this.player.centerOn(this.player.center.x, this.LEVELS[3].y);
     }
 
   },
@@ -295,6 +350,30 @@ Main.Game.prototype = {
       if (this.canChange(prop) && Math.random() < 1/++count)
         result = prop;
     return result;
+  },
+
+  rumble: function(rect, x, y, rot) {
+
+    x = x || 5;
+    y = y || 5;
+    rot = rot || 1;
+
+    var rx = Math.floor(Math.random() * (x+1)) -x/2,
+      ry = Math.floor(Math.random() * (y+1)) -y/2,
+      rrot = Math.floor(Math.random() * (rot+1)) -rot/2;
+
+    rx = (rx === 0 && x !== 0) ? ((Math.random() < 0.5) ? 1 : -1) : rx;
+    ry = (ry === 0 && y !== 0) ? ((Math.random() < 0.5) ? 1 : -1) : ry;
+
+    rect.x = rx;
+    rect.y = ry;
+
+  },
+
+  stopRumble: function(rect, interval) {
+    clearInterval(interval);
+    rect.x = 0;
+    rect.y = 0;
   },
 
   writeDebug: function () {

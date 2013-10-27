@@ -11,6 +11,7 @@ Main.Preloader.prototype = {
   preload: function () {
 
     this.game.load.image('title', 'assets/img/title.png');
+    this.game.load.image('titleName', 'assets/img/title-name.png');
     this.game.load.image('particle', 'assets/img/particle.png');
     this.game.load.image('particleRed', 'assets/img/particle_red.png');
     this.game.load.image('particleYellow', 'assets/img/particle_yellow.png');
@@ -29,7 +30,29 @@ Main.Preloader.prototype = {
     this.game.load.image('gateOrange', 'assets/img/gate_orange.png');
     this.game.load.image('gateGreen', 'assets/img/gate_green.png');
     this.game.load.image('gatePurple', 'assets/img/gate_purple.png');
+    this.game.load.spritesheet('particles', 'assets/img/particles.png', 5, 5);
     this.game.load.spritesheet('button', 'assets/img/buttons.png', 33,33);
+
+    this.game.load.audio('menuLoop', [
+      'assets/audio/514892_Short-Loop.mp3',
+      'assets/audio/514892_Short-Loop.ogg'
+    ]);
+    this.game.load.audio('gameLoop', [
+      'assets/audio/554049_Chased-By-Monsters.mp3',
+      'assets/audio/554049_Chased-By-Monsters.ogg'
+    ]);
+    this.game.load.audio('gateDischarge1', [
+      'assets/audio/gateDischarge.mp3',
+      'assets/audio/gateDischarge.ogg'
+    ]);
+    this.game.load.audio('gateDischarge2', [
+      'assets/audio/gateDischarge2.mp3',
+      'assets/audio/gateDischarge2.ogg'
+    ]);
+    this.game.load.audio('gateDischarge3', [
+      'assets/audio/gateDischarge3.mp3',
+      'assets/audio/gateDischarge3.ogg'
+    ]);
 
   },
 

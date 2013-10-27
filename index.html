@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0" />
     <title>HueChute | BaconGameJam06 Entry</title>
-    <script src="game.js?v=3"></script>
+    <script src="game.js?v=5"></script>
     <style type="text/css">
     body { margin: 0; padding: 1em 0; color: #444; font-family: sans-serif; }
     .wrapper { background:#ccc; width:960px; margin: 0 auto; padding: 0 1em; overflow: auto; }
@@ -13,6 +13,17 @@
     #game canvas { margin: 0 auto; }
     dt { font-weight: bold; }
     .debug { background: #000; width: 790px; margin: 0 auto; padding: 5px; color: yellow; font-size: 12px; }
+    @-webkit-keyframes rumble {
+    0% {-webkit-transform: rotate(0deg);}
+    25% {-webkit-transform: translate(2px, 0px) rotate(-3deg);}
+    50% {-webkit-transform: translate(0px, -2px) rotate(0deg);}
+    75% {-webkit-transform: translate(-2px, 0px) rotate(3deg);}
+    100% {-webkit-transform: translate(0px, 2px) rotate(0deg);} 
+    }
+
+    .rumble {
+        -webkit-animation: rumble .0625s infinite linear;
+    }
     </style>
 </head>
 <body>
@@ -45,6 +56,8 @@
         <dl>
             <dt>UI / HUD</dt>
             <dd>Tracking gates passed / total gates, maybe some control reminders/indicators.</dd>
+            <dt>Level 6 finish indicator</dt>
+            <dd>Currently hard to tell if you failed on last gate or won level 6.</dd>
             <dt>Visual effects</dt>
             <dd>Needs some life, maybe some particles, camera FX etc.</dd>
         </dl>

@@ -12,11 +12,26 @@ Main.MainMenu.prototype = {
   currentLevel: 1,
   unlockedLevels: [1],
   highestGates: {},
+  music: null,
 
   create: function () {
-    
+
+    this.music = this.game.add.audio('menuLoop');
+    this.music.play('', 0, 0.1, true);
+
+    //var tween = this.game.add.tween(this.music)
+    //  .to({volume: 0.5}, 1000, Phaser.Easing.Cubic.In, true);
+
     var bg = this.game.add.sprite(0, 0, 'title');
     bg.fixedToCamera = true;
+
+    var name = this.game.add.sprite(58, 116, 'titleName');
+    name.fixedToCamera = true;
+
+    var nameTween = this.game.add.tween(name)
+      .to({x:name.position.x + 1, y:name.position.y + 3}, 3000, Phaser.Easing.Sinusoidal.In, true)
+      .to({x:name.position.x -1, y:name.position.y - 3}, 3000, Phaser.Easing.Sinusoidal.Out, true)
+      .loop();
 
     var button = this.game.add.button(60, 207, 'button', this.startGame, this, 2, 1, 3);
     button.fixedToCamera = true;
@@ -47,12 +62,18 @@ Main.MainMenu.prototype = {
   },
 
   startGame: function (button) {
-
+    var tween = this.game.add.tween(this.music)
+      .to({volume: 0}, 1000, Phaser.Easing.Cubic.Out, true);
+    tween.onComplete.add(this.stopMenuMusic, this);
     if(this.unlockedLevels.indexOf(button.name) !== -1) {
       Main.MainMenu.prototype.currentLevel = button.name;
       this.game.state.start('game');
     }
 
+  },
+
+  stopMenuMusic: function() {
+    this.music.stop();
   }
 
 };
