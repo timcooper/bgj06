@@ -17,39 +17,47 @@
 </head>
 <body>
     <div class="wrapper">
-        <h1>BaconGameJam 06 Entry</h1>
-        <h2>Theme: Rainbows</h2>
+        <h1>HueChute</h1>
+        <h2>BaconGameJam06 Entry - Theme - Rainbows</h2>
         <p>Move mouse to change level and avoid barriers.</p>
+        <p>Use number keys to change colour in order to pass through gates safely:</p>
+        <ol>
+            <li>Red</li>
+            <li>Yellow</li>
+            <li>Blue</li>
+        </ol>
+        <p><strong>PROTIP:</strong> later levels may require subtractive mixing</p>
     </div>
     <div id="game">
-        <div class="debug">
+        <!--<div class="debug">
             <strong>DEBUG:</strong> 
             Velocity: <span id="debug-velocity"></span> | 
             Distance: <span id="debug-dist"></span>
-        </div>
+        </div>-->
     </div>
     <div class="wrapper">
         <h3>Issues</h3>
         <dl>
-            <dt>You forgot the rainbows</dt>
-            <dd>PROTIP: use number keys 1-3 to preview the primary mechanic</dd>
-            <dt>When I finish it just goes back to the start</dt>
-            <dd>I'll add some game stuff soon, the reward will still be your own sense of accomplishment however.</dd>
-            <dt>Barriers can overlap</dt>
-            <dd>This is due to random placement, plan is to make a more structured style where barriers increase in frequency as you get further.</dd>
-            <dt>Barriers just slow you down and if you shift into one vertically you can go through them</dt>
-            <dd>Hitting barriers will most likely be an instant fail state, don't do the other thing, dick.</dd>
+            <dt>Later levels are overly difficult</dt>
+            <dd>Need to figure out some balance for the latter 3 levels</dd>
         </dl>
-        <h3>Soon</h3>
+        <h3>Working On</h3>
         <dl>
-            <dt>Menu</dt>
-            <dd>So you can click things and press buttons.</dd>
-            <dt>Colour gates</dt>
-            <dd>Something or nothing.</dd>
-            <dt>Improved art</dt>
-            <dd>I might spend more than 10 minutes on all the assets. Or not, you can't make me.</dd>
-            <dt>A name</dt>
-            <dd>Erm, moving ball thing with barriers and stuff&trade; ?</dd>
+            <dt>UI / HUD</dt>
+            <dd>Tracking gates passed / total gates, maybe some control reminders/indicators.</dd>
+            <dt>Visual effects</dt>
+            <dd>Needs some life, maybe some particles, camera FX etc.</dd>
+        </dl>
+        <h3>If time allows</h3>
+        <dl>
+            <dt>Save state</dt>
+            <dd>Can use local storage to keep track of progress</dd>
+            <dt>Sound</dt>
+            <dd>Sound FX and music.</dd>
+            <dt>Improve aesthetic</dt>
+            <dd>Went a bit all over the place with styles, could do with more consistent assets.</dd>
+            <dt>General refactoring, optimsations etc.</dt>
+            <dd>Shit got messy yo.</dd>
         </dl>
     </div>
     <script type="text/javascript">
