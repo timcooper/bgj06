@@ -20,7 +20,35 @@ Main.Game.prototype = {
     }
   },
 
+  COLORS: {
+    red : {
+      sprite: 'particleRed'
+    },
+    yellow : {
+      sprite: 'particleYellow'
+    },
+    blue : {
+      sprite: 'particleBlue'
+    },
+    orange : {
+      sprite: 'particleOrange'
+    },
+    green : {
+      sprite: 'particleGreen'
+    },
+    purple : {
+      sprite: 'particlePurple'
+    },
+    white : {
+      sprite: 'particleWhite'
+    },
+    black : {
+      sprite: 'particle'
+    }
+  },
+
   player:    Phaser.Sprite,
+  enabledColors: ['red'],
   redKey:    null,
   yellowKey: null,
   blueKey:   null,
@@ -34,7 +62,7 @@ Main.Game.prototype = {
 
   create: function () {
 
-    this.game.world.setBounds(0, 0, 10000, this.game.height);
+    this.game.world.setBounds(0, 0, 12800, this.game.height);
 
     this.bg = this.game.add.tileSprite(0, 0, this.game.width, this.game.height, 'background');
     this.bg.fixedToCamera = true;
@@ -59,17 +87,13 @@ Main.Game.prototype = {
     this.barriers.setAll('anchor.y', 0.5);
     this.barriers.setAll('outOfBoundsKill', true);
 
-    var barrier = null;
-    for (var i = 0; i < this.barriers.length; i++) {
-      barrier = this.barriers.getFirstDead();
-
-      barrier.reset(-this.game.camera.x+Math.random()*24000, this.LEVELS[1+Math.floor(Math.random()*3)].y);
-      barrier.body.immovable = true;
-    }
+    this.generateLevel();
 
   },
 
   update: function () {
+    var time   = this.game.time.elapsed,
+      deviance = 2* time / (1+time);
 
     this.bg.tilePosition.x = -this.game.camera.x;
     this.bg.tilePosition.y = -this.game.camera.y;
@@ -87,8 +111,9 @@ Main.Game.prototype = {
     if(this.blueKey.isDown)
       this.colorBlue();
 
-    if(this.atEnd())
+    if(this.atEnd()) {
       this.game.state.start('game');
+    }
 
   },
 
@@ -101,42 +126,42 @@ Main.Game.prototype = {
   },
 
   colorBlack: function() {
-    this.player.loadTexture('particle', 0);
+    this.player.loadTexture(this.COLORS.black.sprite, 0);
   },
 
   colorRed: function() {
-    if(this.yellowKey.isDown && this.blueKey.isDown) {
-      this.player.loadTexture('particleWhite', 0);
-    }else if(this.yellowKey.isDown) {
-      this.player.loadTexture('particleOrange', 0);
-    }else if(this.blueKey.isDown) {
-      this.player.loadTexture('particlePurple', 0);
+    if(this.yellowKey.isDown && this.blueKey.isDown && this.canChange('white')) {
+      this.player.loadTexture(this.COLORS.white.sprite, 0);
+    }else if(this.yellowKey.isDown && this.canChange('orange')) {
+      this.player.loadTexture(this.COLORS.orange.sprite, 0);
+    }else if(this.blueKey.isDown && this.canChange('purple')) {
+      this.player.loadTexture(this.COLORS.purple.sprite, 0);
     }else{
-      this.player.loadTexture('particleRed', 0);
+      this.player.loadTexture(this.COLORS.red.sprite, 0);
     }
   },
 
   colorYellow: function() {
-    if(this.redKey.isDown && this.blueKey.isDown) {
-      this.player.loadTexture('particleWhite', 0);
-    }else if(this.redKey.isDown) {
-      this.player.loadTexture('particleOrange', 0);
-    }else if(this.blueKey.isDown) {
-      this.player.loadTexture('particleGreen', 0);
-    }else{
-      this.player.loadTexture('particleYellow', 0);
+    if(this.redKey.isDown && this.blueKey.isDown && this.canChange('white')) {
+      this.player.loadTexture(this.COLORS.white.sprite, 0);
+    }else if(this.redKey.isDown && this.canChange('orange')) {
+      this.player.loadTexture(this.COLORS.orange.sprite, 0);
+    }else if(this.blueKey.isDown && this.canChange('green')) {
+      this.player.loadTexture(this.COLORS.green.sprite, 0);
+    }else if(this.canChange('yellow')) {
+      this.player.loadTexture(this.COLORS.yellow.sprite, 0);
     }
   },
 
   colorBlue: function() {
-    if(this.yellowKey.isDown && this.redKey.isDown) {
-      this.player.loadTexture('particleWhite', 0);
-    }else if(this.yellowKey.isDown) {
-      this.player.loadTexture('particleGreen', 0);
-    }else if(this.redKey.isDown) {
-      this.player.loadTexture('particlePurple', 0);
-    }else{
-      this.player.loadTexture('particleBlue', 0);
+    if(this.yellowKey.isDown && this.redKey.isDown && this.canChange('white')) {
+      this.player.loadTexture(this.COLORS.white.sprite, 0);
+    }else if(this.yellowKey.isDown && this.canChange('green')) {
+      this.player.loadTexture(this.COLORS.green.sprite, 0);
+    }else if(this.redKey.isDown && this.canChange('purple')) {
+      this.player.loadTexture(this.COLORS.purple.sprite, 0);
+    }else if(this.canChange('blue')) {
+      this.player.loadTexture(this.COLORS.blue.sprite, 0);
     }
   },
 
@@ -151,6 +176,33 @@ Main.Game.prototype = {
       this.player.centerOn(this.player.center.x, this.LEVELS[3].y);
     }
 
+  },
+
+  generateLevel: function() {
+
+    var barrier = null;
+    for (var i = 0; i < this.barriers.length; i++) {
+      barrier = this.barriers.getFirstDead();
+
+      barrier.reset(512*(i+1), this.LEVELS[1+Math.floor(Math.random()*3)].y);
+      barrier.body.immovable = true;
+
+      console.log('color = ' + this.randomColor());
+    }
+
+  },
+
+  canChange: function(color) {
+    return this.enabledColors.indexOf(color) !== -1;
+  },
+
+  randomColor: function() {
+    var result;
+    var count = 0;
+    for (var prop in this.COLORS)
+      if (this.canChange(prop) && Math.random() < 1/++count)
+        result = prop;
+    return result;
   }
 
 };
