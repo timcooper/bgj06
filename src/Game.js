@@ -134,19 +134,23 @@ Main.Game.prototype = {
       this.finish(true);
     }
 
-    this.writeDebug();
+    //this.writeDebug();
   },
 
   finish: function(success) {
-    if(success && Main.MainMenu.prototype.unlockedLevels.length < 6) {
-      if(Main.MainMenu.prototype.unlockedLevels.indexOf(Main.MainMenu.prototype.currentLevel+1) === -1)
-        Main.MainMenu.prototype.unlockedLevels.push(Main.MainMenu.prototype.currentLevel+1);
+    var unlocked = Main.MainMenu.prototype.unlockedLevels,
+      level = Main.MainMenu.prototype.currentLevel,
+      highestGates = Main.MainMenu.prototype.highestGates;
 
-      alert('Winner! You cleared all ' + this.gatesCleared + ' gates!');
+    if(success && unlocked.length < 6) {
+      if(unlocked.indexOf(level+1) === -1)
+        unlocked.push(level+1);
     }else{
-      alert('Fail! You crashed after ' + (this.gatesCleared) + '/25 gates');
+      if(unlocked.indexOf(level+1) === -1) {
+        highestGates[level] = !highestGates.hasOwnProperty(level) || parseInt(highestGates[level]) < this.gatesCleared ? this.gatesCleared : highestGates[level];
+      }
     }
-    this.gatesCleared = 0;
+
     this.lastTime = this.game.time.now;
 
     this.game.state.start('mainmenu', true);

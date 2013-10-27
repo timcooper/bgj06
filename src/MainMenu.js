@@ -11,8 +11,10 @@ Main.MainMenu.prototype = {
 
   currentLevel: 1,
   unlockedLevels: [1],
+  highestGates: {},
 
   create: function () {
+    
     var bg = this.game.add.sprite(0, 0, 'title');
     bg.fixedToCamera = true;
 
